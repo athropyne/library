@@ -14,16 +14,8 @@ if platform.system() == "Windows":
 
 
 @pytest.fixture(scope="module", autouse=True)
-async def setup_db():
-    database = D.database()
-    await database.init(metadata)
+async def finish():
     yield
-    # сносим базу после чудо тестов
-    async with database.engine.connect() as connection:
-        await connection.run_sync(metadata.drop_all)
-        await connection.commit()
-        await database.engine.dispose()
-
     logger.warning("""
     Базы больше нет.
     Нет больше базы.
